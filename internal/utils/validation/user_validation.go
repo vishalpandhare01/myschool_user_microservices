@@ -36,7 +36,11 @@ func CheckMobileNumberExist(mobileNumber string) bool {
 
 func CheckRoleIsCorrect(Role string) bool {
 	if Role == "admin" {
-		return true
+		if err := initializer.DB.Where("role = ?", Role).First(&user).Error; err != nil {
+			fmt.Println("Admin Not Exist: ", err.Error())
+			return true
+		}
+		return false
 	} else if Role == "teacher" {
 		return true
 	} else if Role == "school" {

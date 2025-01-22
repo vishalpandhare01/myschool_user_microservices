@@ -10,6 +10,7 @@ import (
 func Migration() {
 	err := DB.AutoMigrate(
 		model.User{},
+		model.User_Otp{},
 	)
 	if err != nil {
 		log.Fatal("Migration Failed: ", err)

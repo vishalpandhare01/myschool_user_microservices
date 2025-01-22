@@ -13,6 +13,7 @@ require (
 
 require (
 	github.com/andybalholm/brotli v1.1.0 // indirect
+	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/joho/godotenv v1.5.1
 	github.com/klauspost/compress v1.17.9 // indirect
@@ -23,6 +24,7 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.51.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
+	golang.org/x/exp v0.0.0-20250106191152-7588d65b2ba8
 	golang.org/x/sys v0.28.0 // indirect
 	gorm.io/driver/mysql v1.5.7
 	gorm.io/gorm v1.25.12

@@ -13,6 +13,7 @@ func Server(c *fiber.Ctx) error {
 
 func RouteSetUp(app *fiber.App) {
 	var userRoutes = app.Group("/api/v1/user")
-	userRoutes.Post("/api/v1", user.CreateUserHandler)
-
+	userRoutes.Post("/register", user.CreateUserHandler) //access for schools and admin
+	userRoutes.Post("/sendOtp", user.SendOtp)
+	userRoutes.Post("/veryfyOtp", user.VeryfyOtp)
 }
