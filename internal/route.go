@@ -2,6 +2,7 @@ package internal
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/vishalpandhare01/internal/handler/admin"
 	"github.com/vishalpandhare01/internal/handler/user"
 )
 
@@ -16,4 +17,7 @@ func RouteSetUp(app *fiber.App) {
 	userRoutes.Post("/register", user.CreateUserHandler) //access for schools and admin
 	userRoutes.Post("/sendOtp", user.SendOtp)
 	userRoutes.Post("/veryfyOtp", user.VeryfyOtp)
+
+	var adminRoutes = app.Group("/api/v1/admin")
+	adminRoutes.Get("/schools", admin.GetSchoolHandler)
 }

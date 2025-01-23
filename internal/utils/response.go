@@ -10,3 +10,10 @@ type SuccessResponse struct {
 	Message string
 	Data    interface{}
 }
+
+type SuccessListResponse struct {
+	Total   int
+	Perpage int
+	Page    int
+	Data    interface{}
+}
