@@ -2,6 +2,7 @@ package repository
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/vishalpandhare01/initializer"
 	"github.com/vishalpandhare01/internal/model"
@@ -56,4 +57,29 @@ func GetSchoolsRepository(pageStr string, limitStr string, school_name string, i
 	}
 
 	return responseData, nil
+}
+
+func UpdateSchoolPaymentRepository(schoolId string) (*model.User, error) {
+	var user model.User
+	if err := initializer.DB.Where("id = ?", schoolId).First(&user).Error; err != nil {
+		return nil, err
+	}
+
+	user.IsPaidSchool = !user.IsPaidSchool
+	currentTime := time.Now()
+	currentDate := currentTime.Format("2006-01-02")
+	user.SchoolPaymentDate = currentDate
+
+	if err := initializer.DB.Save(&user).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
+func GetSchoolByIdRepository(userId string) (*model.User, error) {
+	var user model.User
+	if err := initializer.DB.Where("id = ?", userId).First(&user).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
 }

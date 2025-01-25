@@ -25,7 +25,7 @@ func IsAdmin(C *fiber.Ctx) error {
 	role, ok := C.Locals("userType").(string)
 	if !ok {
 		// Handle the error if the type assertion fails
-		fmt.Println("userType is not a string")
+		fmt.Println("userType is not a string", ok)
 	}
 
 	if role == "admin" {

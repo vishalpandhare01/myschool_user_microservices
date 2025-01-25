@@ -139,3 +139,34 @@ func GetUserByEmailOrPhone(EmailOrPhone string, isEmail bool) (*model.User, erro
 
 	return &data, nil
 }
+
+// update user by id
+func UpdateUserByIdRepository(body UserBody) (*model.User, error) {
+	var user model.User
+	if body.Address != "" {
+		user.Address = body.Address
+	}
+	if body.Email != "" {
+		user.Email = body.Email
+	}
+	if body.FirstName != "" {
+		user.FirstName = body.FirstName
+	}
+	if body.LastName != "" {
+		user.LastName = body.LastName
+	}
+	if body.MobileNumber != "" {
+		user.MobileNumber = body.MobileNumber
+	}
+	if body.SchoolName != "" {
+		user.SchoolName = body.SchoolName
+	}
+	if body.Image != "" {
+		user.Image = body.Image
+	}
+
+	if err := initializer.DB.Save(&user).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
+}

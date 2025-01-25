@@ -6,6 +6,8 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/vishalpandhare01/initializer"
+	"github.com/vishalpandhare01/internal/model"
 )
 
 type UserData struct {
@@ -32,7 +34,7 @@ func verifyToken(tokenString string) (*UserData, error) {
 		if userok && userTypeok {
 			UserData.UserId = userId
 			UserData.UserType = userTpe
-			// fmt.Println("UserID:", userId, "usertype: ", userTpe)
+			fmt.Println("UserID:", userId, "usertype: ", userTpe)
 		} else {
 			fmt.Println("UserID claim not found or invalid type")
 			return nil, fmt.Errorf("invalid token")
@@ -66,7 +68,7 @@ func Authentication(C *fiber.Ctx) error {
 	// Verify the token
 	userdata, err := verifyToken(tokenString)
 	if err != nil {
-		return C.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+		return C.Status(403).JSON(fiber.Map{
 			"error": err.Error(),
 		})
 	}
@@ -75,4 +77,27 @@ func Authentication(C *fiber.Ctx) error {
 	C.Locals("userId", userdata.UserId)
 	C.Locals("userType", userdata.UserType)
 	return C.Next()
+}
+
+func Authorization(C *fiber.Ctx) error {
+	// role, ok := C.Locals("userType").(string)
+	// if !ok {
+	// 	// Handle the error if the type assertion fails
+	// 	fmt.Println("userType is not a string")
+	// }
+
+	userId, ok := C.Locals("userId").(string)
+	if !ok {
+		// Handle the error if the type assertion fails
+		fmt.Println("userId is not a string")
+	}
+
+	var admin model.User
+	if err := initializer.DB.Where("id = ? AND role = ?", userId, "admin").First(&admin).Error; err != nil {
+		return C.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"message": "only admin authorized",
+		})
+	}
+	return C.Next()
+
 }
