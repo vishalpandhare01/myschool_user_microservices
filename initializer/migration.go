@@ -11,6 +11,8 @@ func Migration() {
 	err := DB.AutoMigrate(
 		model.User{},
 		model.User_Otp{},
+		model.ClassAndStandrd{},
+		model.Student{},
 	)
 	if err != nil {
 		log.Fatal("Migration Failed: ", err)

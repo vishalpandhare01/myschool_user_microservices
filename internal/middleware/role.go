@@ -36,18 +36,18 @@ func IsAdmin(C *fiber.Ctx) error {
 	})
 }
 
-func IsTeacher(C *fiber.Ctx) error {
+func IsStaff(C *fiber.Ctx) error {
 	role, ok := C.Locals("userType").(string)
 	if !ok {
 		// Handle the error if the type assertion fails
 		fmt.Println("userType is not a string")
 	}
 
-	if role == "teacher" {
+	if role == "staff" {
 		return C.Next()
 	}
 	return C.Status(401).JSON(fiber.Map{
-		"message": "You Are Not Authorized for this operation please login as teacher",
+		"message": "You Are Not Authorized for this operation please login as staff",
 	})
 }
 

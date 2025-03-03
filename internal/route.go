@@ -30,5 +30,11 @@ func RouteSetUp(app *fiber.App) {
 	//school apis
 	var schoolRoutes = app.Group("/api/v1/school", middleware.Authentication)
 	schoolRoutes.Get("/", school.GetSchoolByIdHandler)
+	//class
+	schoolRoutes.Post("/class", school.AddClassHandler)
+	schoolRoutes.Get("/class", school.GetClassBySchoolIdHandler)
+	//student
+	schoolRoutes.Post("/student", school.AddSchoolStudentHandler)
+	schoolRoutes.Get("/students", school.GetAllSchoolStudentHandler)
 
 }
