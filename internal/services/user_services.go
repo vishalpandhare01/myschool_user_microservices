@@ -32,7 +32,7 @@ func CreateUserServices(body repository.UserBody) interface{} {
 	if !validation.CheckRoleIsCorrect(body.Role) {
 		return utils.ErrorResponse{
 			Code:    400,
-			Message: "Role should be , 'teacher', 'school', 'student'",
+			Message: "Role should be , 'staff', 'school', 'student'",
 		}
 	}
 
@@ -60,6 +60,13 @@ func CreateOtpServices(body CreateOtpBody) interface{} {
 
 	//check email or phone number exist
 	var user model.User
+
+	if body.Email == "" {
+		return utils.ErrorResponse{
+			Code:    400,
+			Message: "Email required",
+		}
+	}
 
 	if body.Email != "" {
 		response, err := repository.GetUserByEmailOrPhone(body.Email, true)
@@ -157,7 +164,7 @@ func VeryfyOtpServices(body VeryfyOtpBody) interface{} {
 	_, err := repository.VeryfyOtpRepository(body.Otp, user.ID)
 	if err != nil {
 		return utils.ErrorResponse{
-			Code:    500,
+			Code:    400,
 			Message: err.Error(),
 		}
 	}

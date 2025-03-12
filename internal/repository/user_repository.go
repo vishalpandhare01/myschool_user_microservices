@@ -101,7 +101,7 @@ func VeryfyOtpRepository(otp int, userId string) (*model.User_Otp, error) {
 		return nil, err
 	}
 	if data.IsUsed {
-		return nil, errors.New("otp expired ")
+		return nil, errors.New("otp expired")
 	}
 	data.IsUsed = true
 

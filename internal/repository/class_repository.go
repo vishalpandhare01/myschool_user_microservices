@@ -1,8 +1,11 @@
 package repository
 
 import (
+	"fmt"
+
 	"github.com/vishalpandhare01/initializer"
 	"github.com/vishalpandhare01/internal/model"
+	"gorm.io/gorm"
 )
 
 // add class
@@ -11,6 +14,22 @@ func AddNewClassRepository(body *model.ClassAndStandrd) (*model.ClassAndStandrd,
 		return nil, err
 	}
 	return body, nil
+}
+
+func CheckClassExistRepository(body *model.ClassAndStandrd) bool {
+	// Try to find a class or division in the database
+	if err := initializer.DB.
+		Where("class_name = ? AND division_name = ?", body.ClassName, body.DivisionName).
+		First(&body).Error; err != nil {
+		fmt.Println("Error in class: ", err.Error())
+		// If no record is found, return false, indicating it doesn't exist
+		if err == gorm.ErrRecordNotFound {
+			return false // Not found, so class/division doesn't exist
+		}
+	}
+	// Record found, so class/division already exists
+	fmt.Println("check")
+	return true
 }
 
 func GetClassBySchoolIdRepository(schoolId string) (*[]model.ClassAndStandrd, error) {

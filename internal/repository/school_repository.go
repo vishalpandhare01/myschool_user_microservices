@@ -61,7 +61,7 @@ func GetSchoolsRepository(pageStr string, limitStr string, school_name string, i
 
 func UpdateSchoolPaymentRepository(schoolId string) (*model.User, error) {
 	var user model.User
-	if err := initializer.DB.Where("id = ?", schoolId).First(&user).Error; err != nil {
+	if err := initializer.DB.Where("id = ? and role = ?", schoolId, "school").First(&user).Error; err != nil {
 		return nil, err
 	}
 
@@ -78,7 +78,7 @@ func UpdateSchoolPaymentRepository(schoolId string) (*model.User, error) {
 
 func GetSchoolByIdRepository(userId string) (*model.User, error) {
 	var user model.User
-	if err := initializer.DB.Where("id = ?", userId).First(&user).Error; err != nil {
+	if err := initializer.DB.Where("id = ? and role = ?", userId, "school").First(&user).Error; err != nil {
 		return nil, err
 	}
 	return &user, nil

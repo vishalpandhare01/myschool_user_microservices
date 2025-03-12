@@ -24,8 +24,7 @@ func RouteSetUp(app *fiber.App) {
 	//admin apis
 	var adminRoutes = app.Group("/api/v1/admin", middleware.Authentication, middleware.Authorization)
 	adminRoutes.Get("/schools", admin.GetSchoolsHandler)
-	adminRoutes.Patch("/school/:schoolId", admin.UpdateSchoolByIdHandler)
-	adminRoutes.Get("/school/:schoolId", school.GetSchoolByIdHandler)
+	adminRoutes.Patch("/makepaidorunpaid/:schoolId", admin.UpdateSchoolByIdHandler)
 
 	//school apis
 	var schoolRoutes = app.Group("/api/v1/school", middleware.Authentication)
