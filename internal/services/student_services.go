@@ -142,8 +142,18 @@ func AddNewStudentServices(body *model.Student) interface{} {
 }
 
 // get adll student by schoolid (userid)
-func GetAllStudentServices(pageStr string, limitStr string, schoolId string) interface{} {
-	response, err := repository.GetAllStudentRepository(pageStr, limitStr, schoolId)
+func GetAllStudentServices(
+	pageStr string,
+	limitStr string,
+	schoolId string,
+	mobileNumber string,
+	registerNumber string,
+	email string,
+	classID string,
+	fName string,
+	lName string,
+) interface{} {
+	response, err := repository.GetAllStudentRepository(pageStr, limitStr, schoolId, mobileNumber, registerNumber, email, classID, fName, lName)
 	if err != nil {
 		return utils.ErrorResponse{
 			Code:    500,
@@ -177,6 +187,59 @@ func GetStudentByIdServices(studentId string) interface{} {
 	return utils.SuccessResponse{
 		Code:    200,
 		Message: "success",
+		Data:    response,
+	}
+}
+
+// UpdateStudentRepository
+func UpdateStudentDetialsServices(body *model.Student) interface{} {
+
+	//get student first
+	studentData, err := repository.GetStudentRepository(body.ID)
+	if err != nil {
+		if err.Error() == "record not found" {
+			return utils.ErrorResponse{
+				Code:    404,
+				Message: "Studen: " + err.Error(),
+			}
+		}
+		return utils.ErrorResponse{
+			Code:    500,
+			Message: err.Error(),
+		}
+	}
+
+	if body.Email != "" {
+		if validation.CheckEmailExist(body.Email) {
+			return utils.ErrorResponse{
+				Code:    400,
+				Message: "Email Aleready in use",
+			}
+		}
+
+	}
+	if body.MobileNumber != "" {
+		if validation.CheckEmailExist(body.Email) {
+			return utils.ErrorResponse{
+				Code:    400,
+				Message: "Mobile number Aleready in use",
+			}
+		}
+
+	}
+
+	print("studentData: ", studentData)
+	response, err := repository.UpdateStudentRepository(body)
+	if err != nil {
+		return utils.ErrorResponse{
+			Code:    500,
+			Message: err.Error(),
+		}
+	}
+
+	return utils.SuccessResponse{
+		Code:    200,
+		Message: "student Updated successfully",
 		Data:    response,
 	}
 }

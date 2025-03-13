@@ -23,20 +23,50 @@ func AddNewStudentRepository(body *model.Student) (*model.Student, error) {
 }
 
 // get all students
-func GetAllStudentRepository(pageStr string, limitStr string, schoolId string) (interface{}, error) {
+func GetAllStudentRepository(
+	pageStr string,
+	limitStr string,
+	schoolId string,
+	mobileNumber string,
+	registerNumber string,
+	email string,
+	classID string,
+	fName string,
+	lName string,
+) (interface{}, error) {
 	var data *[]model.Student
 	var totalData []model.Student
 	offset, limitInt := funcation.Pagination(pageStr, limitStr)
-	if err := initializer.DB.
-		Where("school_id = ?", schoolId).
-		Preload("User").
+
+	query := initializer.DB.Where("school_id = ?", schoolId)
+	if email != "" {
+		query = query.Where("email = ?", email)
+	}
+	if classID != "" {
+		query = query.Where("class_id = ?", classID)
+	}
+	if fName != "" {
+		query = query.Where("first_name = ?", fName)
+	}
+	if fName != "" {
+		query = query.Where("last_name = ?", lName)
+	}
+	if mobileNumber != "" {
+		query = query.Where("mobile_number = ?", mobileNumber)
+	}
+	if registerNumber != "" {
+		query = query.Where("register_number = ?", registerNumber)
+	}
+
+	query = query.Preload("User").
 		Preload("StudentClass").
 		Preload("School").
 		Limit(limitInt).
 		Offset(offset).
 		Find(&data).
-		Order("id DESC").
-		Error; err != nil {
+		Order("id DESC")
+
+	if err := query.Error; err != nil {
 		return nil, err
 	}
 	if err := initializer.DB.
@@ -70,4 +100,12 @@ func GetStudentRepository(studentId string) (*model.Student, error) {
 	}
 
 	return data, nil
+}
+
+// update student by school
+func UpdateStudentRepository(body *model.Student) (*model.Student, error) {
+	if err := initializer.DB.Save(&body).Error; err != nil {
+		return nil, err
+	}
+	return body, nil
 }

@@ -53,10 +53,16 @@ func GetAllSchoolStudentHandler(c *fiber.Ctx) error {
 	limitStr := c.Query("limit")
 	schoolId, ok := c.Locals("userId").(string)
 	if !ok {
-		// Handle the error if the type assertion fails
 		fmt.Println("userId is not a string")
 	}
-	response := services.GetAllStudentServices(pageStr, limitStr, schoolId)
+	mobileNumber := c.Query("mobileNumber")
+	registerNumber := c.Query("registerNumber")
+	email := c.Query("email")
+	classID := c.Query("class_id")
+	fName := c.Query("fName")
+	lName := c.Query("lName")
+
+	response := services.GetAllStudentServices(pageStr, limitStr, schoolId, mobileNumber, registerNumber, email, classID, fName, lName)
 
 	switch r := response.(type) {
 	case utils.ErrorResponse:
@@ -77,9 +83,7 @@ func GetAllSchoolStudentHandler(c *fiber.Ctx) error {
 
 }
 
-//get student by id
-
-// GetStudentByIdServices
+// get student by id
 func GetStudentByIdHandler(c *fiber.Ctx) error {
 	studentId := c.Params("studentId")
 	response := services.GetStudentByIdServices(studentId)

@@ -35,7 +35,7 @@ func RouteSetUp(app *fiber.App) {
 	schoolRoutes.Delete("/class/:classId", school.DeleteClassByIdHandler)
 	//student
 	schoolRoutes.Post("/student", school.AddSchoolStudentHandler)
-	schoolRoutes.Get("/students", school.GetAllSchoolStudentHandler)
+	schoolRoutes.Get("/students", school.GetAllSchoolStudentHandler) // filter with  RegisterNumber , classid , mobile ,email ,fname,lname
 	schoolRoutes.Get("/student/:studentId", school.GetStudentByIdHandler)
 
 }
