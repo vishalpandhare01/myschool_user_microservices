@@ -76,3 +76,29 @@ func GetAllSchoolStudentHandler(c *fiber.Ctx) error {
 	}
 
 }
+
+//get student by id
+
+// GetStudentByIdServices
+func GetStudentByIdHandler(c *fiber.Ctx) error {
+	studentId := c.Params("studentId")
+	response := services.GetStudentByIdServices(studentId)
+
+	switch r := response.(type) {
+	case utils.ErrorResponse:
+		return c.Status(r.Code).JSON(fiber.Map{
+			"message": r.Message,
+		})
+	case utils.SuccessResponse:
+		return c.Status(r.Code).JSON(fiber.Map{
+			"message": r.Message,
+			"data":    r.Data,
+		})
+	default:
+		return c.Status(500).JSON(fiber.Map{
+			"message": "Somthing wrong in services",
+		})
+
+	}
+
+}

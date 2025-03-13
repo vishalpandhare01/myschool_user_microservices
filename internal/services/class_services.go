@@ -73,3 +73,24 @@ func GetClassBySchoolIdServices(schoolId string) interface{} {
 		Data:    response,
 	}
 }
+
+func DeleteClassByIdServices(classId string, schoolId string) interface{} {
+	_, err := repository.DeleteClassByIdRepository(classId, schoolId)
+	if err != nil {
+		if err.Error() == "record not found" {
+			return utils.ErrorResponse{
+				Code:    404,
+				Message: err.Error(),
+			}
+		}
+		return utils.ErrorResponse{
+			Code:    500,
+			Message: err.Error(),
+		}
+	}
+
+	return utils.SuccessResponse{
+		Code:    200,
+		Message: "class deleted Successfully",
+	}
+}

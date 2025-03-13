@@ -71,3 +71,30 @@ func GetClassBySchoolIdHandler(c *fiber.Ctx) error {
 	}
 
 }
+
+func DeleteClassByIdHandler(c *fiber.Ctx) error {
+	schoolId, ok := c.Locals("userId").(string)
+	if !ok {
+		// Handle the error if the type assertion fails
+		fmt.Println("userId is not a string")
+	}
+	classId := c.Params("classId")
+	response := services.DeleteClassByIdServices(classId, schoolId)
+
+	switch r := response.(type) {
+	case utils.ErrorResponse:
+		return c.Status(r.Code).JSON(fiber.Map{
+			"message": r.Message,
+		})
+	case utils.SuccessResponse:
+		return c.Status(r.Code).JSON(fiber.Map{
+			"message": r.Message,
+		})
+	default:
+		return c.Status(500).JSON(fiber.Map{
+			"message": "Somthing wrong in services",
+		})
+
+	}
+
+}

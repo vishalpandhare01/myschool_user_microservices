@@ -15,25 +15,27 @@ func Server(c *fiber.Ctx) error {
 }
 
 func RouteSetUp(app *fiber.App) {
-	// user apis
+	/*-----------------------  user apis -------------------------------*/
 	var userRoutes = app.Group("/api/v1/user")
 	userRoutes.Post("/register", user.CreateUserHandler) //access for schools and admin
 	userRoutes.Post("/sendOtp", user.SendOtp)
 	userRoutes.Post("/veryfyOtp", user.VeryfyOtp)
 
-	//admin apis
+	/*-----------------------  admin apis -------------------------------*/
 	var adminRoutes = app.Group("/api/v1/admin", middleware.Authentication, middleware.Authorization)
 	adminRoutes.Get("/schools", admin.GetSchoolsHandler)
 	adminRoutes.Patch("/makepaidorunpaid/:schoolId", admin.UpdateSchoolByIdHandler)
 
-	//school apis
+	/*-----------------------  school apis ------------------------------*/
 	var schoolRoutes = app.Group("/api/v1/school", middleware.Authentication)
 	schoolRoutes.Get("/", school.GetSchoolByIdHandler)
 	//class
 	schoolRoutes.Post("/class", school.AddClassHandler)
 	schoolRoutes.Get("/class", school.GetClassBySchoolIdHandler)
+	schoolRoutes.Delete("/class/:classId", school.DeleteClassByIdHandler)
 	//student
 	schoolRoutes.Post("/student", school.AddSchoolStudentHandler)
 	schoolRoutes.Get("/students", school.GetAllSchoolStudentHandler)
+	schoolRoutes.Get("/student/:studentId", school.GetStudentByIdHandler)
 
 }

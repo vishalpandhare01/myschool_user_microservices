@@ -16,6 +16,7 @@ func AddNewClassRepository(body *model.ClassAndStandrd) (*model.ClassAndStandrd,
 	return body, nil
 }
 
+// check class already existr
 func CheckClassExistRepository(body *model.ClassAndStandrd) bool {
 	// Try to find a class or division in the database
 	if err := initializer.DB.
@@ -32,6 +33,7 @@ func CheckClassExistRepository(body *model.ClassAndStandrd) bool {
 	return true
 }
 
+// get all classes
 func GetClassBySchoolIdRepository(schoolId string) (*[]model.ClassAndStandrd, error) {
 	var data []model.ClassAndStandrd
 	if err := initializer.DB.Where("school_id = ?", schoolId).Find(&data).Error; err != nil {
@@ -40,10 +42,22 @@ func GetClassBySchoolIdRepository(schoolId string) (*[]model.ClassAndStandrd, er
 	return &data, nil
 }
 
+// get class by id
 func GetClassByIdRepository(id string) (*model.ClassAndStandrd, error) {
 	var data model.ClassAndStandrd
-	if err := initializer.DB.Where("school_id = ?", id).Find(&data).Error; err != nil {
+	if err := initializer.DB.Where("id = ?", id).First(&data).Error; err != nil {
 		return nil, err
 	}
+	return &data, nil
+}
+
+// delete class by classid and schoolid(userid)
+func DeleteClassByIdRepository(classId string, schoolId string) (*model.ClassAndStandrd, error) {
+	var data model.ClassAndStandrd
+
+	if err := initializer.DB.Where("id = ? AND school_id = ?", classId, schoolId).Delete(&data).Error; err != nil {
+		return nil, err
+	}
+
 	return &data, nil
 }

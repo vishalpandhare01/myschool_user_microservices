@@ -12,6 +12,16 @@ type Student struct {
 	UserID              string           `gorm:"type:varchar(36);not:null"`
 	ClassID             string           `gorm:"type:varchar(36);not:null"`
 	SchoolID            string           `gorm:"type:varchar(36);not:null"` //user_id
+	Image               string           `gorm:"type:text;"`
+	FirstName           string           `gorm:"type:varchar(255);"`
+	LastName            string           `gorm:"type:varchar(255);"`
+	SchoolName          string           `gorm:"type:varchar(255);"`
+	Address             string           `gormL:"type:text;"`
+	Email               string           `gorm:"type:varchar(255);"`
+	MobileNumber        string           `gorm:"type:varchar(20);"`
+	IsPaidSchool        bool             `gorm:"type:boolean;default:false"`
+	SchoolPaymentDate   string           `gormL:"type:text;"`
+	Role                string           `gorm:"type:enum('student');default:'student'"`
 	RegisterNumber      int64            `gorm:"type:bigint;"`
 	MotherName          string           `gorm:"type:varchar(255);"`
 	FatherName          string           `gorm:"type:varchar(255);"`
