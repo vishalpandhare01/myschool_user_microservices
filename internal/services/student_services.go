@@ -20,7 +20,7 @@ func AddNewStudentServices(body *model.Student) interface{} {
 		if err.Error() == "record not found" {
 			return utils.ErrorResponse{
 				Code:    404,
-				Message: "Class Not exist",
+				Message: "ClassID Not" + err.Error(),
 			}
 		}
 	}
@@ -94,7 +94,7 @@ func AddNewStudentServices(body *model.Student) interface{} {
 		if err.Error() == "record not found" {
 			return utils.ErrorResponse{
 				Code:    404,
-				Message: "Class Not exist",
+				Message: "schoolId " + err.Error(),
 			}
 		}
 		return utils.ErrorResponse{
@@ -153,6 +153,16 @@ func GetAllStudentServices(
 	fName string,
 	lName string,
 ) interface{} {
+
+	if classID != "" {
+		if !repository.CheckClassExistbyClassIdRepository(classID, schoolId) {
+			return utils.ErrorResponse{
+				Code:    404,
+				Message: "classId not exist",
+			}
+		}
+	}
+
 	response, err := repository.GetAllStudentRepository(pageStr, limitStr, schoolId, mobileNumber, registerNumber, email, classID, fName, lName)
 	if err != nil {
 		return utils.ErrorResponse{
@@ -193,9 +203,15 @@ func GetStudentByIdServices(studentId string) interface{} {
 
 // UpdateStudentRepository
 func UpdateStudentDetialsServices(body *model.Student) interface{} {
+	if body.UserID == "" {
+		return utils.ErrorResponse{
+			Code:    400,
+			Message: "Student UserID required",
+		}
+	}
 
 	//get student first
-	studentData, err := repository.GetStudentRepository(body.ID)
+	studentData, err := repository.GetStudentRepository(body.UserID)
 	if err != nil {
 		if err.Error() == "record not found" {
 			return utils.ErrorResponse{
@@ -228,6 +244,22 @@ func UpdateStudentDetialsServices(body *model.Student) interface{} {
 
 	}
 
+	if body.ClassID != "" {
+		_, err := repository.GetClassByIdRepository(body.ClassID)
+		if err != nil {
+			if err.Error() == "record not found" {
+				return utils.ErrorResponse{
+					Code:    400,
+					Message: "classId " + err.Error(),
+				}
+			}
+			return utils.ErrorResponse{
+				Code:    500,
+				Message: err.Error(),
+			}
+		}
+	}
+
 	print("studentData: ", studentData)
 	response, err := repository.UpdateStudentRepository(body)
 	if err != nil {
@@ -240,6 +272,76 @@ func UpdateStudentDetialsServices(body *model.Student) interface{} {
 	return utils.SuccessResponse{
 		Code:    200,
 		Message: "student Updated successfully",
+		Data:    response,
+	}
+}
+
+// Remove Student From School serveives
+func RemoveStudentByIdServices(studentUserId string) interface{} {
+	response, err := repository.RemoveStudentFromSchoolRepository(studentUserId)
+	if err != nil {
+		if err.Error() == "record not found" {
+			return utils.ErrorResponse{
+				Code:    404,
+				Message: "student: " + err.Error(),
+			}
+		}
+		return utils.ErrorResponse{
+			Code:    500,
+			Message: err.Error(),
+		}
+	}
+
+	return utils.SuccessResponse{
+		Code:    200,
+		Message: "student removed successfully",
+		Data:    response,
+	}
+}
+
+//MoveBulkStudentToAnotherClass
+
+func MoveBulkStudentToAnotherClassServices(currentClassId string, nextClassId string, schoolId string) interface{} {
+
+	if currentClassId == "" {
+		return utils.ErrorResponse{
+			Code:    400,
+			Message: "currentClassId required",
+		}
+	}
+
+	if nextClassId == "" {
+		return utils.ErrorResponse{
+			Code:    400,
+			Message: "nextClassId required",
+		}
+	}
+
+	if !repository.CheckClassExistbyClassIdRepository(currentClassId, schoolId) {
+		return utils.ErrorResponse{
+			Code:    404,
+			Message: "currentClassId not exist",
+		}
+	}
+
+	if !repository.CheckClassExistbyClassIdRepository(nextClassId, schoolId) {
+		return utils.ErrorResponse{
+			Code:    404,
+			Message: "nextClassId not exist",
+		}
+	}
+
+	response, err := repository.MoveBulkStudentToAnotherClassRepository(currentClassId, nextClassId, schoolId)
+	if err != nil {
+		return utils.ErrorResponse{
+			Code:    500,
+			Message: err.Error(),
+		}
+	}
+
+	return utils.SuccessResponse{
+		Code:    200,
+		Message: "Student Move to New Class successfully",
 		Data:    response,
 	}
 }

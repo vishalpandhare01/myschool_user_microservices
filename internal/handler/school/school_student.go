@@ -106,3 +106,94 @@ func GetStudentByIdHandler(c *fiber.Ctx) error {
 	}
 
 }
+
+// update student details
+func UpdateSchoolStudentHandler(c *fiber.Ctx) error {
+
+	var body model.Student
+	schoolId, ok := c.Locals("userId").(string)
+	if !ok {
+		// Handle the error if the type assertion fails
+		fmt.Println("userId is not a string")
+	}
+
+	body.RegisterNumber = int64(body.RegisterNumber)
+	if err := c.BodyParser(&body); err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	body.SchoolID = schoolId
+	response := services.UpdateStudentDetialsServices(&body)
+
+	switch r := response.(type) {
+	case utils.ErrorResponse:
+		return c.Status(r.Code).JSON(fiber.Map{
+			"message": r.Message,
+		})
+	case utils.SuccessResponse:
+		return c.Status(r.Code).JSON(fiber.Map{
+			"message": r.Message,
+			"data":    r.Data,
+		})
+	default:
+		return c.Status(500).JSON(fiber.Map{
+			"message": "Somthing wrong in services",
+		})
+
+	}
+
+}
+
+// Remove Student By Id handler
+func RemoveStudentByIdHandler(c *fiber.Ctx) error {
+	studentId := c.Params("studentId")
+	response := services.RemoveStudentByIdServices(studentId)
+
+	switch r := response.(type) {
+	case utils.ErrorResponse:
+		return c.Status(r.Code).JSON(fiber.Map{
+			"message": r.Message,
+		})
+	case utils.SuccessResponse:
+		return c.Status(r.Code).JSON(fiber.Map{
+			"message": r.Message,
+			"data":    r.Data,
+		})
+	default:
+		return c.Status(500).JSON(fiber.Map{
+			"message": "Somthing wrong in services",
+		})
+	}
+
+}
+
+func MoveBulkStudentToAnotherClassByIdHandler(c *fiber.Ctx) error {
+	currentClassId := c.Params("currentClassId")
+	nextClassId := c.Params("nextClassId")
+	schoolId, ok := c.Locals("userId").(string)
+	if !ok {
+		// Handle the error if the type assertion fails
+		fmt.Println("userId is not a string")
+	}
+	response := services.MoveBulkStudentToAnotherClassServices(currentClassId, nextClassId, schoolId)
+
+	switch r := response.(type) {
+	case utils.ErrorResponse:
+		return c.Status(r.Code).JSON(fiber.Map{
+			"message": r.Message,
+		})
+	case utils.SuccessResponse:
+		return c.Status(r.Code).JSON(fiber.Map{
+			"message": r.Message,
+			"data":    r.Data,
+		})
+	default:
+		return c.Status(500).JSON(fiber.Map{
+			"message": "Somthing wrong in services",
+		})
+
+	}
+
+}

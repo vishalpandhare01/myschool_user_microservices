@@ -20,7 +20,7 @@ func AddNewClassRepository(body *model.ClassAndStandrd) (*model.ClassAndStandrd,
 func CheckClassExistRepository(body *model.ClassAndStandrd) bool {
 	// Try to find a class or division in the database
 	if err := initializer.DB.
-		Where("class_name = ? AND division_name = ?", body.ClassName, body.DivisionName).
+		Where("class_name = ? AND division_name = ? AND school_id = ?", body.ClassName, body.DivisionName, body.SchoolID).
 		First(&body).Error; err != nil {
 		fmt.Println("Error in class: ", err.Error())
 		// If no record is found, return false, indicating it doesn't exist
@@ -60,4 +60,20 @@ func DeleteClassByIdRepository(classId string, schoolId string) (*model.ClassAnd
 	}
 
 	return &data, nil
+}
+
+// check class already exist by classid
+func CheckClassExistbyClassIdRepository(classId string, schoolId string) bool {
+	var class model.ClassAndStandrd
+
+	if err := initializer.DB.
+		Where("id = ? AND school_id =?", classId, schoolId).
+		First(&class).Error; err != nil {
+		fmt.Println("Error in class: ", err.Error())
+		if err == gorm.ErrRecordNotFound {
+			return false
+		}
+	}
+	fmt.Println("check")
+	return true
 }

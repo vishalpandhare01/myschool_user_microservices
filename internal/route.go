@@ -28,14 +28,19 @@ func RouteSetUp(app *fiber.App) {
 
 	/*-----------------------  school apis ------------------------------*/
 	var schoolRoutes = app.Group("/api/v1/school", middleware.Authentication)
+
 	schoolRoutes.Get("/", school.GetSchoolByIdHandler)
 	//class
 	schoolRoutes.Post("/class", school.AddClassHandler)
 	schoolRoutes.Get("/class", school.GetClassBySchoolIdHandler)
 	schoolRoutes.Delete("/class/:classId", school.DeleteClassByIdHandler)
+
 	//student
 	schoolRoutes.Post("/student", school.AddSchoolStudentHandler)
 	schoolRoutes.Get("/students", school.GetAllSchoolStudentHandler) // filter with  RegisterNumber , classid , mobile ,email ,fname,lname
 	schoolRoutes.Get("/student/:studentId", school.GetStudentByIdHandler)
+	schoolRoutes.Put("/student", school.UpdateSchoolStudentHandler)
+	schoolRoutes.Delete("/student/:studentId", school.RemoveStudentByIdHandler)
+	schoolRoutes.Patch("/student/class/:currentClassId/newclass/:nextClassId", school.MoveBulkStudentToAnotherClassByIdHandler)
 
 }

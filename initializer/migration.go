@@ -13,6 +13,7 @@ func Migration() {
 		model.User_Otp{},
 		model.ClassAndStandrd{},
 		model.Student{},
+		model.PastStudent{},
 	)
 	if err != nil {
 		log.Fatal("Migration Failed: ", err)
