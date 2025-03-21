@@ -2,14 +2,10 @@ package model
 
 import (
 	"time"
-
-	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
 
 type Student struct {
-	ID                  string           `gorm:"type:char(36);primarykey"`
-	UserID              string           `gorm:"type:varchar(36);not:null"`
+	UserID              string           `gorm:"type:varchar(36);primarykey;not:null"`
 	ClassID             string           `gorm:"type:varchar(36);not:null"`
 	SchoolID            string           `gorm:"type:varchar(36);not:null"` //user_id
 	Image               string           `gorm:"type:text;"`
@@ -22,6 +18,7 @@ type Student struct {
 	IsPaidSchool        bool             `gorm:"type:boolean;default:false"`
 	SchoolPaymentDate   string           `gormL:"type:text;"`
 	Role                string           `gorm:"type:enum('student');default:'student'"`
+	Gender              string           `gorm:"type:enum('male','female','other');default:'other'"`
 	RegisterNumber      int64            `gorm:"type:bigint;"`
 	MotherName          string           `gorm:"type:varchar(255);"`
 	FatherName          string           `gorm:"type:varchar(255);"`
@@ -36,17 +33,12 @@ type Student struct {
 	IsLeaved            bool             `gorm:"type:boolean;default:false"`
 	StudentDoc          string           `gorm:"type:text;"`
 	ReasonOfLeaving     string           `gorm:"type:text;"`
-	ParentsMobileNumber string           `gorm:"type:varchar(20);not null;unique"`
+	ParentsMobileNumber string           `gorm:"type:varchar(20)"`
 	CreatedAt           time.Time        `gorm:"autoCreateTime" json:"createdAt,omitempty"`
 	UpdatedAt           time.Time        `gorm:"autoUpdateTime" json:"updatedAt,omitempty"`
 	User                *User            `gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE;"`
 	School              *User            `gorm:"foreignKey:SchoolID;constraint:OnDelete:CASCADE;"`
 	StudentClass        *ClassAndStandrd `gorm:"foreignKey:ClassID;constraint:OnDelete:CASCADE;"`
-}
-
-func (U *Student) BeforeCreate(tx *gorm.DB) (err error) {
-	U.ID = uuid.New().String()
-	return
 }
 
 type PastStudent struct {

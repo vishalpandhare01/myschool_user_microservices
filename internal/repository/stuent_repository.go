@@ -195,6 +195,9 @@ func UpdateStudentRepository(body *model.Student) (*model.Student, error) {
 	if body.Remark != "" {
 		student.Remark = body.Remark
 	}
+	if body.Gender != "" {
+		student.Gender = body.Gender
+	}
 
 	if err := initializer.DB.
 		Save(&user).
@@ -224,7 +227,6 @@ func RemoveStudentFromSchoolRepository(userId string) (*model.PastStudent, error
 	}
 
 	var pastStudent = model.PastStudent{
-		ID:                  data.ID,
 		UserID:              data.UserID,
 		ClassID:             data.ClassID,
 		SchoolID:            data.SchoolID,

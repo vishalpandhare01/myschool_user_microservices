@@ -14,6 +14,8 @@ func Migration() {
 		model.ClassAndStandrd{},
 		model.Student{},
 		model.PastStudent{},
+		model.Staff{},
+		model.FeeType{},
 	)
 	if err != nil {
 		log.Fatal("Migration Failed: ", err)

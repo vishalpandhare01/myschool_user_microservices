@@ -9,16 +9,16 @@ import (
 	"github.com/vishalpandhare01/internal/utils"
 )
 
-func AddSchoolStudentHandler(c *fiber.Ctx) error {
+// add staff by school
+func AddSchoolStaffHandler(c *fiber.Ctx) error {
 
-	var body model.Student
+	var body model.Staff
 	schoolId, ok := c.Locals("userId").(string)
 	if !ok {
 		// Handle the error if the type assertion fails
 		fmt.Println("userId is not a string")
 	}
 
-	body.RegisterNumber = int64(body.RegisterNumber)
 	if err := c.BodyParser(&body); err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"message": err.Error(),
@@ -26,7 +26,7 @@ func AddSchoolStudentHandler(c *fiber.Ctx) error {
 	}
 
 	body.SchoolID = schoolId
-	response := services.AddNewStudentServices(&body)
+	response := services.AddNewStaffServices(&body)
 
 	switch r := response.(type) {
 	case utils.ErrorResponse:
@@ -47,8 +47,8 @@ func AddSchoolStudentHandler(c *fiber.Ctx) error {
 
 }
 
-// GetAllStudentServices
-func GetAllSchoolStudentHandler(c *fiber.Ctx) error {
+// get all staff from school
+func GetAllStaffStudentHandler(c *fiber.Ctx) error {
 	pageStr := c.Query("page")
 	limitStr := c.Query("limit")
 	schoolId, ok := c.Locals("userId").(string)
@@ -56,13 +56,12 @@ func GetAllSchoolStudentHandler(c *fiber.Ctx) error {
 		fmt.Println("userId is not a string")
 	}
 	mobileNumber := c.Query("mobileNumber")
-	registerNumber := c.Query("registerNumber")
 	email := c.Query("email")
 	classID := c.Query("class_id")
 	fName := c.Query("fName")
 	lName := c.Query("lName")
 
-	response := services.GetAllStudentServices(pageStr, limitStr, schoolId, mobileNumber, registerNumber, email, classID, fName, lName)
+	response := services.GetAllStaffServices(pageStr, limitStr, schoolId, mobileNumber, email, classID, fName, lName)
 
 	switch r := response.(type) {
 	case utils.ErrorResponse:
@@ -83,10 +82,10 @@ func GetAllSchoolStudentHandler(c *fiber.Ctx) error {
 
 }
 
-// get student by userId
-func GetStudentByIdHandler(c *fiber.Ctx) error {
-	studentId := c.Params("studentId")
-	response := services.GetStudentByIdServices(studentId)
+// get staff by userid
+func GetStaffbyIdHandler(c *fiber.Ctx) error {
+	userid := c.Params("userid")
+	response := services.GetStaffByIdServices(userid)
 
 	switch r := response.(type) {
 	case utils.ErrorResponse:
@@ -107,17 +106,16 @@ func GetStudentByIdHandler(c *fiber.Ctx) error {
 
 }
 
-// update student details
-func UpdateSchoolStudentHandler(c *fiber.Ctx) error {
+// update staff details
+func UpdateSchoolStaffHandler(c *fiber.Ctx) error {
 
-	var body model.Student
+	var body model.Staff
 	schoolId, ok := c.Locals("userId").(string)
 	if !ok {
 		// Handle the error if the type assertion fails
 		fmt.Println("userId is not a string")
 	}
 
-	body.RegisterNumber = int64(body.RegisterNumber)
 	if err := c.BodyParser(&body); err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"message": err.Error(),
@@ -125,7 +123,7 @@ func UpdateSchoolStudentHandler(c *fiber.Ctx) error {
 	}
 
 	body.SchoolID = schoolId
-	response := services.UpdateStudentDetialsServices(&body)
+	response := services.UpdateStaffDetialsServices(&body)
 
 	switch r := response.(type) {
 	case utils.ErrorResponse:
@@ -146,38 +144,10 @@ func UpdateSchoolStudentHandler(c *fiber.Ctx) error {
 
 }
 
-// Remove Student By Id handler
-func RemoveStudentByIdHandler(c *fiber.Ctx) error {
-	studentId := c.Params("studentId")
-	response := services.RemoveStudentByIdServices(studentId)
-
-	switch r := response.(type) {
-	case utils.ErrorResponse:
-		return c.Status(r.Code).JSON(fiber.Map{
-			"message": r.Message,
-		})
-	case utils.SuccessResponse:
-		return c.Status(r.Code).JSON(fiber.Map{
-			"message": r.Message,
-			"data":    r.Data,
-		})
-	default:
-		return c.Status(500).JSON(fiber.Map{
-			"message": "Somthing wrong in services",
-		})
-	}
-
-}
-
-func MoveBulkStudentToAnotherClassByIdHandler(c *fiber.Ctx) error {
-	currentClassId := c.Params("currentClassId")
-	nextClassId := c.Params("nextClassId")
-	schoolId, ok := c.Locals("userId").(string)
-	if !ok {
-		// Handle the error if the type assertion fails
-		fmt.Println("userId is not a string")
-	}
-	response := services.MoveBulkStudentToAnotherClassServices(currentClassId, nextClassId, schoolId)
+// delete staff account
+func DeleteStaffbyIdHandler(c *fiber.Ctx) error {
+	userid := c.Params("userid")
+	response := services.DeleteStaffByIdServices(userid)
 
 	switch r := response.(type) {
 	case utils.ErrorResponse:

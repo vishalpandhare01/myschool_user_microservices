@@ -7,8 +7,8 @@ import (
 	"github.com/vishalpandhare01/internal/utils/validation"
 )
 
-// add student in school
-func AddNewStudentServices(body *model.Student) interface{} {
+// add staff in school
+func AddNewStaffServices(body *model.Staff) interface{} {
 	if body.ClassID == "" {
 		return utils.ErrorResponse{
 			Code:    400,
@@ -39,13 +39,6 @@ func AddNewStudentServices(body *model.Student) interface{} {
 		}
 	}
 
-	if body.FatherName == "" {
-		return utils.ErrorResponse{
-			Code:    400,
-			Message: "Error: first name required ",
-		}
-	}
-
 	if body.LastName == "" {
 		return utils.ErrorResponse{
 			Code:    400,
@@ -53,24 +46,10 @@ func AddNewStudentServices(body *model.Student) interface{} {
 		}
 	}
 
-	if body.ParentsMobileNumber == "" {
+	if body.Gender != "male" && body.Gender != "female" {
 		return utils.ErrorResponse{
 			Code:    400,
-			Message: "Error: perent mobile number required ",
-		}
-	}
-
-	if body.MotherName == "" {
-		return utils.ErrorResponse{
-			Code:    400,
-			Message: "Error: mothere name required ",
-		}
-	}
-
-	if body.PlaceOfBirth == "" {
-		return utils.ErrorResponse{
-			Code:    400,
-			Message: "place of birth required ",
+			Message: "Error: Gender required ",
 		}
 	}
 
@@ -103,7 +82,7 @@ func AddNewStudentServices(body *model.Student) interface{} {
 		}
 	}
 
-	//first register student
+	//first register staff
 	registerResponse, err := repository.CreateUserRepository(
 		repository.UserBody{
 			Image:        body.Image,
@@ -112,7 +91,7 @@ func AddNewStudentServices(body *model.Student) interface{} {
 			SchoolName:   schoolData.SchoolName,
 			Email:        body.Email,
 			MobileNumber: body.MobileNumber,
-			Role:         "student",
+			Role:         "staff",
 			Address:      body.Address,
 		},
 	)
@@ -124,9 +103,9 @@ func AddNewStudentServices(body *model.Student) interface{} {
 	}
 
 	body.UserID = registerResponse.ID
-	//add student to school
+	//add staff to school
 
-	response, err := repository.AddNewStudentRepository(body)
+	response, err := repository.AddNewStaffRepository(body)
 	if err != nil {
 		return utils.ErrorResponse{
 			Code:    500,
@@ -136,18 +115,17 @@ func AddNewStudentServices(body *model.Student) interface{} {
 
 	return utils.SuccessResponse{
 		Code:    201,
-		Message: "student added successfully",
+		Message: "staff added successfully",
 		Data:    response,
 	}
 }
 
-// get adll student by schoolid (userid)
-func GetAllStudentServices(
+// get all staff services
+func GetAllStaffServices(
 	pageStr string,
 	limitStr string,
 	schoolId string,
 	mobileNumber string,
-	registerNumber string,
 	email string,
 	classID string,
 	fName string,
@@ -163,7 +141,7 @@ func GetAllStudentServices(
 		}
 	}
 
-	response, err := repository.GetAllStudentRepository(pageStr, limitStr, schoolId, mobileNumber, registerNumber, email, classID, fName, lName)
+	response, err := repository.GetAllStaffRepository(pageStr, limitStr, schoolId, mobileNumber, email, classID, fName, lName)
 	if err != nil {
 		return utils.ErrorResponse{
 			Code:    500,
@@ -178,14 +156,14 @@ func GetAllStudentServices(
 	}
 }
 
-// get student by userId
-func GetStudentByIdServices(studentId string) interface{} {
-	response, err := repository.GetStudentRepository(studentId)
+// get staff by id
+func GetStaffByIdServices(userID string) interface{} {
+	response, err := repository.GetStaffRepository(userID)
 	if err != nil {
 		if err.Error() == "record not found" {
 			return utils.ErrorResponse{
 				Code:    404,
-				Message: "student: " + err.Error(),
+				Message: "staff: " + err.Error(),
 			}
 		}
 		return utils.ErrorResponse{
@@ -201,22 +179,22 @@ func GetStudentByIdServices(studentId string) interface{} {
 	}
 }
 
-// UpdateStudentRepository
-func UpdateStudentDetialsServices(body *model.Student) interface{} {
+// Update staff services
+func UpdateStaffDetialsServices(body *model.Staff) interface{} {
 	if body.UserID == "" {
 		return utils.ErrorResponse{
 			Code:    400,
-			Message: "Student UserID required",
+			Message: "staff UserID required",
 		}
 	}
 
-	//get student first
-	studentData, err := repository.GetStudentRepository(body.UserID)
+	//get staff first
+	staffdata, err := repository.GetStaffRepository(body.UserID)
 	if err != nil {
 		if err.Error() == "record not found" {
 			return utils.ErrorResponse{
 				Code:    404,
-				Message: "Studen: " + err.Error(),
+				Message: "staff: " + err.Error(),
 			}
 		}
 		return utils.ErrorResponse{
@@ -260,8 +238,8 @@ func UpdateStudentDetialsServices(body *model.Student) interface{} {
 		}
 	}
 
-	print("studentData: ", studentData)
-	response, err := repository.UpdateStudentRepository(body)
+	print("staffdata: ", staffdata)
+	response, err := repository.UpdateStaffRepository(body)
 	if err != nil {
 		return utils.ErrorResponse{
 			Code:    500,
@@ -271,19 +249,19 @@ func UpdateStudentDetialsServices(body *model.Student) interface{} {
 
 	return utils.SuccessResponse{
 		Code:    200,
-		Message: "student Updated successfully",
+		Message: "staff Updated successfully",
 		Data:    response,
 	}
 }
 
-// Remove Student From School serveives
-func RemoveStudentByIdServices(studentUserId string) interface{} {
-	response, err := repository.RemoveStudentFromSchoolRepository(studentUserId)
+// Delete Staff Acount
+func DeleteStaffByIdServices(userID string) interface{} {
+	response, err := repository.DeleteStaffAcountSchoolRepository(userID)
 	if err != nil {
 		if err.Error() == "record not found" {
 			return utils.ErrorResponse{
 				Code:    404,
-				Message: "student: " + err.Error(),
+				Message: "staff: " + err.Error(),
 			}
 		}
 		return utils.ErrorResponse{
@@ -294,54 +272,7 @@ func RemoveStudentByIdServices(studentUserId string) interface{} {
 
 	return utils.SuccessResponse{
 		Code:    200,
-		Message: "student removed successfully",
-		Data:    response,
-	}
-}
-
-//MoveBulkStudentToAnotherClass
-
-func MoveBulkStudentToAnotherClassServices(currentClassId string, nextClassId string, schoolId string) interface{} {
-
-	if currentClassId == "" {
-		return utils.ErrorResponse{
-			Code:    400,
-			Message: "currentClassId required",
-		}
-	}
-
-	if nextClassId == "" {
-		return utils.ErrorResponse{
-			Code:    400,
-			Message: "nextClassId required",
-		}
-	}
-
-	if !repository.CheckClassExistbyClassIdRepository(currentClassId, schoolId) {
-		return utils.ErrorResponse{
-			Code:    404,
-			Message: "currentClassId not exist",
-		}
-	}
-
-	if !repository.CheckClassExistbyClassIdRepository(nextClassId, schoolId) {
-		return utils.ErrorResponse{
-			Code:    404,
-			Message: "nextClassId not exist",
-		}
-	}
-
-	response, err := repository.MoveBulkStudentToAnotherClassRepository(currentClassId, nextClassId, schoolId)
-	if err != nil {
-		return utils.ErrorResponse{
-			Code:    500,
-			Message: err.Error(),
-		}
-	}
-
-	return utils.SuccessResponse{
-		Code:    200,
-		Message: "Student Move to New Class successfully",
+		Message: "staff account delete successfully",
 		Data:    response,
 	}
 }

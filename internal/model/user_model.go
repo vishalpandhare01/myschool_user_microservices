@@ -18,6 +18,11 @@ type User struct {
 	MobileNumber      string    `gorm:"type:varchar(20);not null;unique"`
 	IsPaidSchool      bool      `gorm:"type:boolean;default:false"`
 	SchoolPaymentDate string    `gormL:"type:text;"`
+	LoginTime         string    `gormL:"type:text;"`
+	LoginLocation     string    `gormL:"type:text;"`
+	IpAddress         string    `gormL:"type:text;"`
+	DeviceType        string    `gormL:"type:text;"`
+	DeviceToken       string    `gormL:"type:text;"`
 	Role              string    `gorm:"type:enum('admin', 'staff', 'school', 'student');not null"`
 	CreatedAt         time.Time `gorm:"autoCreateTime" json:"createdAt,omitempty"`
 	UpdatedAt         time.Time `gorm:"autoUpdateTime" json:"updatedAt,omitempty"`
