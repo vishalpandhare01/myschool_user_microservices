@@ -2,6 +2,7 @@ package validation
 
 import (
 	"fmt"
+	"regexp"
 	"time"
 
 	"github.com/vishalpandhare01/initializer"
@@ -55,4 +56,16 @@ func ValidDateOfBirth(date string) bool {
 	layout := "2006-01-02"
 	_, err := time.Parse(layout, date)
 	return err == nil
+}
+
+func ValidateYearRange(input string) bool {
+	// Regular expression to match the format YYYY-YYYY
+	// ^: start of the string
+	// \d{4}: exactly four digits
+	// -: a literal hyphen
+	// \d{4}: exactly four digits
+	// $: end of the string
+	re := regexp.MustCompile(`^\d{4}-\d{4}$`)
+
+	return re.MatchString(input)
 }

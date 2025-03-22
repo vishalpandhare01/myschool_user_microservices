@@ -39,17 +39,23 @@ func (U *FeesStructure) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 type StudentFees struct {
-	UserID          string         `gorm:"type:varchar(36);primarykey;not:null"`
-	SchoolID        string         `gorm:"type:varchar(36);not:null"`
-	Status          string         `gorm:"type:enum('paid','pending','partial');default:'pending'"`
-	AcademicYear    string         `gorm:"type:varchar(20);not null" json:"academicYear"`
-	TotalAmount     float64        `gorm:"type:decimal(10,2);not:null"`
-	PaidAmount      float64        `gorm:"type:decimal(10,2);not:null"`
-	RemainingAmount float64        `gorm:"type:decimal(10,2)" json:"remainingAmount,omitempty"`
-	CreatedAt       time.Time      `gorm:"autoCreateTime" json:"createdAt,omitempty"`
-	UpdatedAt       time.Time      `gorm:"autoUpdateTime" json:"updatedAt,omitempty"`
-	FeeDetials      *FeesStructure `gorm:"foreignKey:FeedID;constraint:OnDelete:CASCADE;"`
-	User            *User          `gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE;"`
+	ID              string    `gorm:"type:char(36);primarykey"`
+	UserID          string    `gorm:"type:varchar(36);not:null"`
+	SchoolID        string    `gorm:"type:varchar(36);not:null"`
+	AcademicYear    string    `gorm:"type:varchar(10);not:null"` // Store "YYYY-YYYY" format
+	Status          string    `gorm:"type:enum('paid','pending','partial');default:'pending'"`
+	TotalAmount     float64   `gorm:"type:decimal(10,2);not:null"`
+	PaidAmount      float64   `gorm:"type:decimal(10,2);not:null"`
+	RemainingAmount float64   `gorm:"type:decimal(10,2)" json:"remainingAmount,omitempty"`
+	CreatedAt       time.Time `gorm:"autoCreateTime" json:"createdAt,omitempty"`
+	UpdatedAt       time.Time `gorm:"autoUpdateTime" json:"updatedAt,omitempty"`
+	User            *User     `gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE;"`
+	FeesDetails     string    `gorm:"text;not:null"`
+}
+
+func (U *StudentFees) BeforeCreate(tx *gorm.DB) (err error) {
+	U.ID = uuid.New().String()
+	return
 }
 
 type Payment struct {

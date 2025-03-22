@@ -19,6 +19,7 @@ type Student struct {
 	SchoolPaymentDate   string           `gormL:"type:text;"`
 	Role                string           `gorm:"type:enum('student');default:'student'"`
 	Gender              string           `gorm:"type:enum('male','female','other');default:'other'"`
+	AcademicYear        string           `gorm:"type:varchar(10);"` // Store "YYYY-YYYY" format
 	RegisterNumber      int64            `gorm:"type:bigint;"`
 	MotherName          string           `gorm:"type:varchar(255);"`
 	FatherName          string           `gorm:"type:varchar(255);"`

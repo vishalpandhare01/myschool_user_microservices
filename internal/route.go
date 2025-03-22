@@ -52,8 +52,12 @@ func RouteSetUp(app *fiber.App) {
 
 	//fees
 	//fee types
-	schoolRoutes.Post("/fees/type", school.AddFeesTypeHandler)
+	schoolRoutes.Post("/fees/type", school.AddFeesTypeHandler) //Note :- can user for update just need same id
 	schoolRoutes.Get("/fees/type", school.GetFeesTypesHandler)
 	//fees structure
-
+	schoolRoutes.Post("/fees/structrue", school.AddFeeStructureTypesHandler) //Note :- can user for update just need same id
+	schoolRoutes.Get("/fees/structrue", school.GetFeeStructuresHandler)
+	//student fees
+	schoolRoutes.Post("/student/fees", school.AddStudentFeesHandler)
+	schoolRoutes.Get("/student/fees/:userid", school.GetStudentFeesHandler)
 }

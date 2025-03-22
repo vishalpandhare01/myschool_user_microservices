@@ -182,9 +182,8 @@ func UpdateStudentRepository(body *model.Student) (*model.Student, error) {
 	if body.ProgrssInStudies != "" {
 		student.ProgrssInStudies = body.ProgrssInStudies
 	}
-	if body.RegisterNumber > 0 {
-		// student.RegisterNumber = body.RegisterNumber
-		fmt.Println("Student reg. ", body.RegisterNumber)
+	if body.RegisterNumber != 0 {
+		student.RegisterNumber = body.RegisterNumber
 	}
 	if body.ReasonOfLeaving != "" {
 		student.ReasonOfLeaving = body.ReasonOfLeaving
@@ -197,6 +196,9 @@ func UpdateStudentRepository(body *model.Student) (*model.Student, error) {
 	}
 	if body.Gender != "" {
 		student.Gender = body.Gender
+	}
+	if body.AcademicYear != "" {
+		student.AcademicYear = body.AcademicYear
 	}
 
 	if err := initializer.DB.
