@@ -64,4 +64,9 @@ func RouteSetUp(app *fiber.App) {
 	schoolRoutes.Post("/time-table/", school.CreateTimeTableHandler)
 	schoolRoutes.Get("/time-table/:classId", school.GetTimeTableHandler)
 	schoolRoutes.Delete("/time-table/:tableId", school.DeleteTimeTableHandler)
+
+	/*-----------------------  teacher or staff apis ------------------------------*/
+
+	/*-----------------------  student  apis ------------------------------*/
+
 }

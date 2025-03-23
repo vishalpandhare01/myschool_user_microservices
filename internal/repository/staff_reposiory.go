@@ -109,6 +109,19 @@ func GetStaffRepository(userId string) (*model.Staff, error) {
 	return data, nil
 }
 
+// check staff exist with schoolid staff id
+func CheckStaffExistStaffRepository(userId string, schoolID string) bool {
+	var data *model.Staff
+	if err := initializer.DB.
+		Where("user_id = ? AND school_id = ?", userId, schoolID).
+		First(&data).
+		Error; err != nil {
+		return false
+	}
+
+	return true
+}
+
 // update staff by userId
 func UpdateStaffRepository(body *model.Staff) (*model.Staff, error) {
 	var Staff *model.Staff

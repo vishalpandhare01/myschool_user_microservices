@@ -10,19 +10,24 @@ import (
 
 // create exam time table
 func CreateTimeTableServices(body *model.TimeTable) interface{} {
-	//todo check class exist
-	//todo check staff exist
-	//todo sort start time order
 	if body.ClassID == "" {
 		return utils.ErrorResponse{
 			Code:    400,
 			Message: "classID required",
 		}
 	}
+
 	if body.SchoolID == "" {
 		return utils.ErrorResponse{
 			Code:    400,
 			Message: "SchoolID required",
+		}
+	}
+
+	if !repository.CheckClassExistbyClassIdRepository(body.ClassID, body.SchoolID) {
+		return utils.ErrorResponse{
+			Code:    404,
+			Message: "ClassID not exist",
 		}
 	}
 
@@ -49,6 +54,13 @@ func CreateTimeTableServices(body *model.TimeTable) interface{} {
 		return utils.ErrorResponse{
 			Code:    400,
 			Message: "TeacherID required",
+		}
+	}
+
+	if !repository.CheckStaffExistStaffRepository(body.TeacherID, body.SchoolID) {
+		return utils.ErrorResponse{
+			Code:    404,
+			Message: "TeacherID (staff userid) not exist",
 		}
 	}
 
