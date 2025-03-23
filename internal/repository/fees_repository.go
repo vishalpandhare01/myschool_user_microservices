@@ -5,6 +5,8 @@ import (
 
 	"github.com/vishalpandhare01/initializer"
 	"github.com/vishalpandhare01/internal/model"
+	"github.com/vishalpandhare01/internal/utils"
+	"github.com/vishalpandhare01/internal/utils/funcation"
 )
 
 // add and update fees types
@@ -55,7 +57,7 @@ func GetFeesStructureListRepository(schoolID string) (*[]model.FeesStructure, er
 
 // add  StudentFees
 func AddFeesStudentFeesRepository(body *model.StudentFees) (*model.StudentFees, error) {
-	if err := initializer.DB.Create(&body).Error; err != nil {
+	if err := initializer.DB.Save(&body).Error; err != nil {
 		return nil, err
 	}
 
@@ -77,12 +79,64 @@ func AddFeesStudentFeesRepository(body *model.StudentFees) (*model.StudentFees, 
 }
 
 // get  StudentFees by user id and school id
-func GetStudentFeesRepository(UserId string, schoolID string, acadmicYear string) (*[]model.StudentFees, error) {
+func GetStudentFeesRepository(
+	pageStr string,
+	limitStr string,
+	UserId string,
+	schoolID string,
+	acadmicYear string,
+	status string) (interface{}, error) {
+
 	var StudentFees *[]model.StudentFees
-	query := initializer.DB.Where("user_id = ? AND school_id = ?", UserId, schoolID)
-	if acadmicYear != "" {
-		query = initializer.DB.Where("user_id = ? AND school_id = ? AND academic_year = ?", UserId, schoolID, acadmicYear)
+	var totalData []model.StudentFees
+
+	offset, limitInt := funcation.Pagination(pageStr, limitStr)
+	fmt.Println("limitInt", limitInt, "offset", offset)
+
+	query := initializer.DB.Where("school_id = ?", schoolID)
+
+	if UserId != "" {
+		query = query.Where("user_id = ?", UserId)
 	}
+
+	if acadmicYear != "" {
+		query = query.Where("academic_year = ?", acadmicYear)
+	}
+
+	if status != "" {
+		query = query.Where("status = ?", status)
+	}
+
+	// Now query will be built with all the conditions correctly.
+
+	if err := query.Find(&totalData).Error; err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+
+	if err := query.
+		Limit(limitInt).
+		Offset(offset).
+		Preload("User").
+		Order("id DESC").
+		Find(&StudentFees).
+		Error; err != nil {
+		return nil, err
+	}
+
+	responseData := utils.SuccessListResponse{
+		Total:   len(totalData),
+		Perpage: limitInt,
+		Page:    offset,
+		Data:    StudentFees,
+	}
+	return responseData, nil
+}
+
+// get  StudentFees by user id and school id
+func GetStudentFeesByIDRepository(UserId string, schoolID string, acadmicYear string) (*model.StudentFees, error) {
+	var StudentFees *model.StudentFees
+	query := initializer.DB.Where("user_id = ? AND school_id = ? AND academic_year = ?", UserId, schoolID, acadmicYear)
 	if err := query.
 		First(&StudentFees).
 		Error; err != nil {

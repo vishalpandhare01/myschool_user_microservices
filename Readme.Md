@@ -1,3 +1,33 @@
+daily time table
+ CREATE TABLE daily_timetable (
+    time_slot_id INT PRIMARY KEY AUTO_INCREMENT,
+    day_of_week VARCHAR(10) NOT NULL,
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    subject VARCHAR(100) NOT NULL,
+    class_id INT NOT NULL,
+    teacher_id INT,
+    FOREIGN KEY (teacher_id) REFERENCES staff(staff_id),
+    FOREIGN KEY (class_id) REFERENCES classes(class_id)
+);
+
+--------------------------------------------------------
+|  Daily Timetable Overview (Weekly View)               |
+--------------------------------------------------------
+| Monday    | Tuesday   | Wednesday | Thursday  | Friday |
+--------------------------------------------------------
+|  08:00    | 08:00     | 08:00     | 08:00     | 08:00  |
+| Subject 1 | Subject 2 | Subject 3 | Subject 4 | Subject 5|
+--------------------------------------------------------
+|  09:00    | 09:00     | 09:00     | 09:00     | 09:00  |
+| Subject 6 | Subject 7 | Subject 8 | Subject 9 | Subject 10|
+--------------------------------------------------------
+
+--------------------------------------------------------
+|  + Add/Edit Class Entry (Button)                      |
+--------------------------------------------------------
+
+ 
  CREATE TABLE attendance (
     attendance_id INT PRIMARY KEY AUTO_INCREMENT,
     date DATE NOT NULL,
@@ -10,22 +40,42 @@
     FOREIGN KEY (class_id) REFERENCES classes(class_id),
     FOREIGN KEY (teacher_id) REFERENCES staff(staff_id)
 );
+--------------------------------------------------------
+| Date: [Date Picker]   Class: [Dropdown]   Subject: [Dropdown]  |
+--------------------------------------------------------
+|  Student Name  |  2025-03-23  | Status   | Actions          |
+--------------------------------------------------------
+| John Doe      |  Present     | [Edit]   |
+--------------------------------------------------------
+| Jane Smith    |  Absent      | [Edit]   |
+--------------------------------------------------------
+| Alice Brown   |  Late        | [Edit]   |
+--------------------------------------------------------
+| Mark Johnson  |  Present     | [Edit]   |
+--------------------------------------------------------
+
+[Mark Attendance for All] [View Report]
 
 
- results
-CREATE TABLE exam_results (
-    exam_result_id INT PRIMARY KEY AUTO_INCREMENT,
-    exam_id INT NOT NULL,
-    student_id INT NOT NULL,
-    subject VARCHAR(100) NOT NULL,
-    marks_obtained DECIMAL(5,2) NOT NULL,
-    total_marks DECIMAL(5,2) NOT NULL,
-    grade VARCHAR(2),
-    percentage DECIMAL(5,2),
-    status VARCHAR(20),
-    FOREIGN KEY (exam_id) REFERENCES exams(exam_id),
-    FOREIGN KEY (student_id) REFERENCES students(student_id)
-);
+
+---------------------------------------------------------
+| Bulk Result Entry                                      |
+---------------------------------------------------------
+| Upload CSV: [Choose File]                              |
+| OR                                                    |
+| Enter Results Manually:                               |
+---------------------------------------------------------
+| Student Name    | Marks Obtained | Total Marks | Grade | Status |
+---------------------------------------------------------
+| John Doe        | 85             | 100         | A     | Passed |
+---------------------------------------------------------
+| Jane Smith      | 50             | 100         | C     | Failed |
+---------------------------------------------------------
+| Alice Brown     | 72             | 100         | B     | Passed |
+---------------------------------------------------------
+
+[Save] [Cancel]
+
 
 
  homework
@@ -46,8 +96,7 @@ CREATE TABLE exam_results (
 );
 
 
- notifications
-
+notifications
 CREATE TABLE notes_and_learning (
     note_id INT PRIMARY KEY AUTO_INCREMENT,
     teacher_id INT NOT NULL,
@@ -80,18 +129,7 @@ CREATE TABLE notifications (
 
 
 
- daily time table
- CREATE TABLE daily_timetable (
-    time_slot_id INT PRIMARY KEY AUTO_INCREMENT,
-    day_of_week VARCHAR(10) NOT NULL,
-    start_time TIME NOT NULL,
-    end_time TIME NOT NULL,
-    subject VARCHAR(100) NOT NULL,
-    class_id INT NOT NULL,
-    teacher_id INT,
-    FOREIGN KEY (teacher_id) REFERENCES staff(staff_id),
-    FOREIGN KEY (class_id) REFERENCES classes(class_id)
-);
+
   
 chat microservices
 post microservices

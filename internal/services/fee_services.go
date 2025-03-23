@@ -161,7 +161,7 @@ func AddStudentFeesServices(body *model.StudentFees) interface{} {
 	if body.AcademicYear == "" {
 		return utils.ErrorResponse{
 			Code:    400,
-			Message: "FAcademicYear required (YYYY-YYYY)",
+			Message: "AcademicYear required (YYYY-YYYY)",
 		}
 	}
 
@@ -222,7 +222,41 @@ func AddStudentFeesServices(body *model.StudentFees) interface{} {
 		}
 	}
 
-	response, err := repository.AddFeesStudentFeesRepository(body)
+	responseData, err := repository.GetStudentFeesByIDRepository(body.UserID, body.SchoolID, body.AcademicYear)
+	if err != nil {
+		if err.Error() == "record not found" {
+			response, err := repository.AddFeesStudentFeesRepository(body)
+			if err != nil {
+				if err.Error() == "record not found" {
+					return utils.ErrorResponse{
+						Code:    404,
+						Message: "Fees: " + err.Error(),
+					}
+				}
+				return utils.ErrorResponse{
+					Code:    500,
+					Message: err.Error(),
+				}
+			}
+
+			return utils.SuccessResponse{
+				Code:    200,
+				Message: "success",
+				Data:    response,
+			}
+
+		}
+		return utils.ErrorResponse{
+			Code:    500,
+			Message: err.Error(),
+		}
+	}
+
+	responseData.Status = body.Status
+	responseData.PaidAmount = body.PaidAmount
+	responseData.RemainingAmount = body.RemainingAmount
+
+	response, err := repository.AddFeesStudentFeesRepository(responseData)
 	if err != nil {
 		if err.Error() == "record not found" {
 			return utils.ErrorResponse{
@@ -244,8 +278,15 @@ func AddStudentFeesServices(body *model.StudentFees) interface{} {
 }
 
 // get student fees by user id and schoolid or acadmic year
-func GetStudentFeesServices(userid string, schoolId string, acdmicyear string) interface{} {
-	response, err := repository.GetStudentFeesRepository(userid, schoolId, acdmicyear)
+func GetStudentFeesServices(
+	pageStr string,
+	limitStr string,
+	userid string,
+	schoolId string,
+	acdmicyear string,
+	status string,
+) interface{} {
+	response, err := repository.GetStudentFeesRepository(pageStr, limitStr, userid, schoolId, acdmicyear, status)
 	if err != nil {
 		if err.Error() == "record not found" {
 			return utils.ErrorResponse{
@@ -265,3 +306,5 @@ func GetStudentFeesServices(userid string, schoolId string, acdmicyear string) i
 		Data:    response,
 	}
 }
+
+//update student fee recored

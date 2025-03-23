@@ -191,10 +191,13 @@ func GetStudentFeesHandler(c *fiber.Ctx) error {
 		// Handle the error if the type assertion fails
 		fmt.Println("userId is not a string")
 	}
-	userid := c.Params("userid")
-	acadmicYear := c.Params("acadmicYear")
+	userid := c.Query("userid")
+	pageStr := c.Query("page")
+	limitStr := c.Query("limit")
+	acadmicYear := c.Query("acadmicYear")
+	status := c.Query("status")
 
-	response := services.GetStudentFeesServices(userid, schoolId, acadmicYear)
+	response := services.GetStudentFeesServices(pageStr, limitStr, userid, schoolId, acadmicYear, status)
 
 	switch r := response.(type) {
 	case utils.ErrorResponse:

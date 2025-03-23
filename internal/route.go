@@ -58,6 +58,10 @@ func RouteSetUp(app *fiber.App) {
 	schoolRoutes.Post("/fees/structrue", school.AddFeeStructureTypesHandler) //Note :- can user for update just need same id
 	schoolRoutes.Get("/fees/structrue", school.GetFeeStructuresHandler)
 	//student fees
-	schoolRoutes.Post("/student/fees", school.AddStudentFeesHandler)
-	schoolRoutes.Get("/student/fees/:userid", school.GetStudentFeesHandler)
+	schoolRoutes.Post("/students/fees", school.AddStudentFeesHandler)
+	schoolRoutes.Get("/students/fees", school.GetStudentFeesHandler)
+	//time table
+	schoolRoutes.Post("/time-table/", school.CreateTimeTableHandler)
+	schoolRoutes.Get("/time-table/:classId", school.GetTimeTableHandler)
+	schoolRoutes.Delete("/time-table/:tableId", school.DeleteTimeTableHandler)
 }
