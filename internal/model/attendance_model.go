@@ -1,14 +1,29 @@
 package model
 
-//  CREATE TABLE attendance (
-//     attendance_id INT PRIMARY KEY AUTO_INCREMENT,
-//     date DATE NOT NULL,
-//     class_id INT NOT NULL,
-//     student_id INT NOT NULL,
-//     status VARCHAR(10) NOT NULL,
-//     subject VARCHAR(100),
-//     teacher_id INT,
-//     FOREIGN KEY (student_id) REFERENCES students(student_id),
-//     FOREIGN KEY (class_id) REFERENCES classes(class_id),
-//     FOREIGN KEY (teacher_id) REFERENCES staff(staff_id)
-// );
+import (
+	"time"
+
+	"github.com/google/uuid"
+	"gorm.io/gorm"
+)
+
+type Attendance struct {
+	ID              string           `gorm:"type:char(36);primarykey;not:null"`
+	ClassID         string           `gorm:"type:char(36);not:null"`
+	StudentID       string           `gorm:"type:char(36);not:null"`
+	TeacherID       string           `gorm:"type:char(36);not:null"`
+	SchoolID        string           `gorm:"type:char(36);not:null"`
+	Subject         string           `gorm:"type:varchar(100);not:nill"`
+	Status          string           `gorm:"type:enum('present','absent,'leave');not:nill"`
+	School          *User            `gorm:"foreignKey:SchoolID;constraint:OnDelete:CASCADE;"`
+	ClassAndStandrd *ClassAndStandrd `gorm:"foreignKey:ClassID;constraint:OnDelete:CASCADE;"`
+	Student         *Student         `gorm:"foreignKey:StudentID;constraint:OnDelete:CASCADE;"`
+	Teacher         *Staff           `gorm:"foreignKey:TeacherID;constraint:OnDelete:CASCADE;"`
+	CreatedAt       time.Time        `gorm:"autoCreateTime" json:"createdAt,omitempty"`
+	UpdatedAt       time.Time        `gorm:"autoUpdateTime" json:"updatedAt,omitempty"`
+}
+
+func (A *Attendance) BeforeCreate(tx *gorm.DB) (err error) {
+	A.ID = uuid.New().String()
+	return
+}

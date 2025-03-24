@@ -1,4 +1,5 @@
 
+
 --------------------------------------------------------
 |  Daily Timetable Overview (Weekly View)               |
 --------------------------------------------------------
@@ -57,5 +58,5 @@
 - chat microservices
 - websites microservices
 - post microservices
-- attachment microservices
+- attachment and notification microservices
 

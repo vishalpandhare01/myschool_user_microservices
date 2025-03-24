@@ -19,6 +19,7 @@ func Migration() {
 		model.StudentFees{},
 		model.FeesStructure{},
 		model.TimeTable{},
+		model.Attendance{},
 	)
 	if err != nil {
 		log.Fatal("Migration Failed: ", err)
