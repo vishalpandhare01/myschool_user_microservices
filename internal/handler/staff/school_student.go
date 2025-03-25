@@ -1,4 +1,4 @@
-package school
+package staff
 
 import (
 	"github.com/gofiber/fiber/v2"
@@ -6,17 +6,20 @@ import (
 	"github.com/vishalpandhare01/internal/utils"
 )
 
-// get Attendance handler
-// date string, classId string, schoolId string, subject string, teacherId string, studentId string
-func GetAttendanceHandler(c *fiber.Ctx) error {
-	date := c.Query("date")
-	classId := c.Query("classId")
+// GetAllStudentServices
+func GetAllSchoolStudentHandler(c *fiber.Ctx) error {
 	schoolId := c.Params("schoolId")
-	subject := c.Query("subject")
-	teacherId := c.Query("teacherId")
-	studentId := c.Query("studentId")
+	pageStr := c.Query("page")
+	limitStr := c.Query("limit")
+	mobileNumber := c.Query("mobileNumber")
+	registerNumber := c.Query("registerNumber")
+	email := c.Query("email")
+	classID := c.Query("class_id")
+	fName := c.Query("fName")
+	lName := c.Query("lName")
 
-	response := services.GetAttaendanceRepository(date, classId, schoolId, subject, teacherId, studentId)
+	response := services.GetAllStudentServices(pageStr, limitStr, schoolId, mobileNumber, registerNumber, email, classID, fName, lName)
+
 	switch r := response.(type) {
 	case utils.ErrorResponse:
 		return c.Status(r.Code).JSON(fiber.Map{

@@ -1,22 +1,21 @@
-package school
+package staff
 
 import (
+	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/vishalpandhare01/internal/services"
 	"github.com/vishalpandhare01/internal/utils"
 )
 
-// get Attendance handler
-// date string, classId string, schoolId string, subject string, teacherId string, studentId string
-func GetAttendanceHandler(c *fiber.Ctx) error {
-	date := c.Query("date")
-	classId := c.Query("classId")
-	schoolId := c.Params("schoolId")
-	subject := c.Query("subject")
-	teacherId := c.Query("teacherId")
-	studentId := c.Query("studentId")
+func GetLoginUserHandler(c *fiber.Ctx) error {
+	userId, ok := c.Locals("userId").(string)
+	if !ok {
+		// Handle the error if the type assertion fails
+		fmt.Println("userId is not a string")
+	}
+	response := services.GetStaffByIdServices(userId)
 
-	response := services.GetAttaendanceRepository(date, classId, schoolId, subject, teacherId, studentId)
 	switch r := response.(type) {
 	case utils.ErrorResponse:
 		return c.Status(r.Code).JSON(fiber.Map{

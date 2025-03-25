@@ -57,6 +57,7 @@
   
 - chat microservices
 - websites microservices
+- exam-and-event microservices 
 - post microservices
 - attachment and notification microservices
 

@@ -5,6 +5,7 @@ import (
 	"github.com/vishalpandhare01/internal/handler/admin"
 	"github.com/vishalpandhare01/internal/handler/school"
 	"github.com/vishalpandhare01/internal/handler/staff"
+	"github.com/vishalpandhare01/internal/handler/student"
 	"github.com/vishalpandhare01/internal/handler/user"
 	"github.com/vishalpandhare01/internal/middleware"
 )
@@ -63,19 +64,30 @@ func RouteSetUp(app *fiber.App) {
 	schoolRoutes.Get("/students/fees", school.GetStudentFeesHandler)
 	//time table
 	schoolRoutes.Post("/time-table/", school.CreateTimeTableHandler)
-	schoolRoutes.Get("/time-table/:classId", school.GetTimeTableHandler)
 	schoolRoutes.Delete("/time-table/:tableId", school.DeleteTimeTableHandler)
 
 	/*-----------------------  teacher or staff apis ------------------------------*/
 	var staffRoutes = app.Group("/api/v1/staff", middleware.Authentication, middleware.IsStaff)
+	staffRoutes.Get("/", staff.GetLoginUserHandler)
+
+	//class
+	staffRoutes.Get("/class/:schoolId", staff.GetClassBySchoolIdHandler)
+
+	//student
+	staffRoutes.Get("/students/:schoolId", staff.GetAllSchoolStudentHandler)
+
+	//attendance
 	staffRoutes.Post("/attendance/", staff.CreateAttendanceByTeacherHandler)
-	staffRoutes.Put("/attendance/", staff.CreateAttendanceByTeacherHandler)
+	staffRoutes.Put("/attendance/", staff.UpdateAttendanceByTeacherHandler)
 
 	/*-----------------------  student  apis ------------------------------*/
-	// var studentRoutes = app.Group("/api/v1/student", middleware.Authentication, middleware.IsStudent)
+	var studentRoutes = app.Group("/api/v1/student", middleware.Authentication, middleware.IsStudent)
+	studentRoutes.Get("/", student.GetLoginUserHandler)
 
 	/*-----------------------  Commmon apis ------------------------------*/
-	var commmonRoutes = app.Group("api/v1/school/", middleware.Authentication)
-	commmonRoutes.Get("/attendance", school.GetAttendanceHandler)
+	var commmonRoutes = app.Group("api/v1", middleware.Authentication)
+	commmonRoutes.Get("/attendance/:schoolId", school.GetAttendanceHandler)
+	commmonRoutes.Get("/time-table/school/:schoolId/class/:classId", school.GetTimeTableHandler)
+	//get login user
 
 }

@@ -22,7 +22,7 @@ func GetAttendanceRepository(
 	teacherId string,
 	studentId string) (*[]model.Attendance, error) {
 	var attendance *[]model.Attendance
-	query := initializer.DB.Where("date = ? AND school_id", date, schoolId).Find(&attendance)
+	query := initializer.DB.Where("school_id = ?", schoolId)
 	if subject != "" {
 		query = query.Where("subject = ?", subject)
 	}
@@ -32,8 +32,14 @@ func GetAttendanceRepository(
 	if studentId != "" {
 		query = query.Where("student_id = ?", studentId)
 	}
+	if date != "" {
+		query = query.Where("date = ?", date)
+	}
+	if classId != "" {
+		query = query.Where("class_id = ?", classId)
+	}
 
-	if err := query.Error; err != nil {
+	if err := query.Find(&attendance).Error; err != nil {
 		return nil, err
 	}
 	return attendance, nil

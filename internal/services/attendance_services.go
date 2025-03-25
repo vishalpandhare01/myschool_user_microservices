@@ -16,17 +16,16 @@ func CreateAttendanceServices(body *model.Attendance) interface{} {
 		}
 	}
 
-	if !repository.CheckClassExistbyClassIdRepository(body.ClassID, body.SchoolID) {
-		return utils.ErrorResponse{
-			Code:    404,
-			Message: "Class Not found",
-		}
-	}
-
 	if body.SchoolID == "" {
 		return utils.ErrorResponse{
 			Code:    400,
 			Message: "SchoolID required",
+		}
+	}
+	if !repository.CheckClassExistbyClassIdRepository(body.ClassID, body.SchoolID) {
+		return utils.ErrorResponse{
+			Code:    404,
+			Message: "Class Not found",
 		}
 	}
 

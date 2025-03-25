@@ -50,11 +50,7 @@ func CreateTimeTableHandler(c *fiber.Ctx) error {
 
 // get Time table handler
 func GetTimeTableHandler(c *fiber.Ctx) error {
-	schoolId, ok := c.Locals("userId").(string)
-	if !ok {
-		// Handle the error if the type assertion fails
-		fmt.Println("userId is not a string")
-	}
+	schoolId := c.Params("schoolId")
 	classId := c.Params("classId")
 	response := services.GetTimeTableServices(classId, schoolId)
 

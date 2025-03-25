@@ -92,3 +92,26 @@ func VeryfyOtp(c *fiber.Ctx) error {
 
 	}
 }
+
+func GetLoginUserHandler(c *fiber.Ctx) error {
+	userId := c.Params("userId")
+	response := services.GetSchoolByIdServices(userId)
+
+	switch r := response.(type) {
+	case utils.ErrorResponse:
+		return c.Status(r.Code).JSON(fiber.Map{
+			"message": r.Message,
+		})
+	case utils.SuccessResponse:
+		return c.Status(r.Code).JSON(fiber.Map{
+			"message": r.Message,
+			"data":    r.Data,
+		})
+	default:
+		return c.Status(500).JSON(fiber.Map{
+			"message": "Somthing wrong in services",
+		})
+
+	}
+
+}
