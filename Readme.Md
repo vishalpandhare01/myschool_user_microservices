@@ -138,3 +138,114 @@
 - post microservices
 - attachment and notification microservices
 
+
+### 1. **Chat Microservice**
+   **Responsibilities**:
+   - Provide a real-time messaging system for students, staff, and parents.
+   - Support one-on-one messaging and group conversations (class groups, parent-teacher communication, etc.).
+   - Store chat history and allow search functionality.
+   - Implement notifications for new messages.
+
+   **Endpoints**:
+   - `POST /chat/{userId}/message`: Send a message to a user.
+   - `GET /chat/{userId}/messages`: Retrieve messages for a specific user.
+   - `GET /chat/{userId}/messages/{conversationId}`: Get messages within a specific conversation.
+   - `POST /chat/{userId}/group`: Create a group chat for a class or event.
+   - `GET /chat/{conversationId}/participants`: Get participants in a group conversation.
+   - `POST /chat/{conversationId}/notification`: Send notifications for unread messages.
+  
+   **Considerations**:
+   - Real-time messaging can be handled using **WebSockets** for real-time bi-directional communication.
+   - Message storage could use a **NoSQL** database like **MongoDB** to efficiently store messages and metadata.
+   - Ensure proper data privacy and security, especially if sensitive student or staff communication is involved.
+   - Implement features like read receipts, typing indicators, and message deletion.
+
+---
+
+### 2. **Website Microservice**
+   **Responsibilities**:
+   - Manage the content of the school’s website (news, events, blog posts, etc.).
+   - Allow admins to add, edit, and delete website content.
+   - Serve public-facing information, such as school details, event announcements, and news updates.
+   - Potentially offer a CMS (Content Management System) for easier management.
+
+   **Endpoints**:
+   - `POST /website/content`: Add new content (news, blog posts, events).
+   - `GET /website/content/{id}`: Retrieve specific content (news, events, blog post).
+   - `GET /website/content`: List all public content.
+   - `PUT /website/content/{id}`: Update content details.
+   - `DELETE /website/content/{id}`: Delete content from the website.
+
+   **Considerations**:
+   - Use a **CMS** approach or **static site generation** tools (e.g., **WordPress**, **Jekyll**, or custom CMS with **Strapi** or **Sanity.io**) for content management.
+   - Ensure good SEO practices for content pages.
+   - Integrate with external APIs for events, weather, or calendar feeds.
+   - Implement caching for faster loading of content.
+
+---
+
+### 3. **Exam and Event Microservice**
+   **Responsibilities**:
+   - Manage exam schedules, results, and event details.
+   - Allow scheduling and tracking of both academic and extracurricular events (sports, concerts, parent meetings, etc.).
+   - Provide event notifications and reminders to students, teachers, and parents.
+   - Track attendance and participation in events.
+
+   **Endpoints**:
+   - `POST /exam`: Schedule a new exam.
+   - `GET /exam/{id}`: Retrieve exam details.
+   - `POST /exam/{id}/results`: Post exam results.
+   - `POST /event`: Create a new event (classroom, extracurricular).
+   - `GET /event/{id}`: Retrieve event details.
+   - `POST /event/{id}/participation`: Record participation in an event.
+   - `POST /event/{id}/notification`: Send notifications for upcoming events.
+
+   **Considerations**:
+   - The **event** service should support recurring events (e.g., weekly sports practice).
+   - Integrate calendar systems or event management tools for better visualization.
+   - Keep exams and events separate but linked (e.g., an event can have a scheduled exam).
+   - Allow notifications to be triggered for event reminders and changes (via SMS, email, or in-app).
+
+---
+
+### 4. **Post Microservice**
+   **Responsibilities**:
+   - Allow students, staff, and admins to post and share updates, assignments, and announcements.
+   - Facilitate forums or discussion boards for collaborative learning or teacher feedback.
+   - Allow sharing of multimedia (images, documents, videos) with posts.
+   - Provide upvoting/downvoting, comments, and reactions on posts.
+
+   **Endpoints**:
+   - `POST /post`: Create a new post (assignment, update, or announcement).
+   - `GET /post/{id}`: Retrieve post details.
+   - `GET /post`: Retrieve all posts (filtered by user, class, type).
+   - `PUT /post/{id}`: Edit an existing post.
+   - `DELETE /post/{id}`: Delete a post.
+   - `POST /post/{id}/reaction`: React to a post (like, comment, etc.).
+
+   **Considerations**:
+   - Implement media storage for files like images or PDFs (e.g., using **Amazon S3** or **Google Cloud Storage**).
+   - Posts related to assignments or feedback could have timestamps for due dates and grades.
+   - Implement moderation and role-based permissions for posting (e.g., only teachers can post grades).
+
+---
+
+### 5. **Attachment and Notification Microservice**
+   **Responsibilities**:
+   - Manage the attachment of files, documents, or images to posts, assignments, or messages.
+   - Handle notifications for system updates, such as upcoming exams, assignments, or events.
+   - Notify users of new posts, comments, grades, and messages.
+
+   **Endpoints**:
+   - `POST /attachment`: Upload an attachment to a post or assignment.
+   - `GET /attachment/{id}`: Retrieve attachment details.
+   - `POST /notification`: Send a notification to users.
+   - `GET /notification/{userId}`: Retrieve notifications for a user.
+   - `GET /notification`: List all notifications (filtered by type, read/unread).
+   - `PUT /notification/{id}/read`: Mark a notification as read.
+
+   **Considerations**:
+   - Integrate with file storage solutions for attachments (e.g., **AWS S3**, **Google Cloud Storage**).
+   - Use a notification system like **Firebase Cloud Messaging** (FCM) or **OneSignal** for push notifications.
+   - Make sure notifications are targeted (e.g., only notify students of assignments related to their enrolled subjects).
+   - Ensure efficient storage of attachments with metadata (size, file type, date uploaded).
