@@ -13,9 +13,9 @@ type Attendance struct {
 	StudentID       string           `gorm:"type:char(36);not:null"`
 	TeacherID       string           `gorm:"type:char(36);not:null"`
 	SchoolID        string           `gorm:"type:char(36);not:null"`
-	Subject         string           `gorm:"type:varchar(100);not:nill"`
-	Date            string           `gorm:"type:varchar(10);not:nill"`
-	Status          string           `gorm:"type:enum('present','absent,'leave');not:nill"`
+	Subject         string           `gorm:"type:varchar(100);not:null"`
+	Date            string           `gorm:"type:varchar(10);not:null"`
+	Status          string           `gorm:"type:enum('present', 'absent', 'leave');not:null"`
 	School          *User            `gorm:"foreignKey:SchoolID;constraint:OnDelete:CASCADE;"`
 	ClassAndStandrd *ClassAndStandrd `gorm:"foreignKey:ClassID;constraint:OnDelete:CASCADE;"`
 	Student         *Student         `gorm:"foreignKey:StudentID;constraint:OnDelete:CASCADE;"`

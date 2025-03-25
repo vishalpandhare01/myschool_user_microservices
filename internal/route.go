@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/vishalpandhare01/internal/handler/admin"
 	"github.com/vishalpandhare01/internal/handler/school"
+	"github.com/vishalpandhare01/internal/handler/staff"
 	"github.com/vishalpandhare01/internal/handler/user"
 	"github.com/vishalpandhare01/internal/middleware"
 )
@@ -27,7 +28,7 @@ func RouteSetUp(app *fiber.App) {
 	adminRoutes.Patch("/makepaidorunpaid/:schoolId", admin.UpdateSchoolByIdHandler)
 
 	/*-----------------------  school apis ------------------------------*/
-	var schoolRoutes = app.Group("/api/v1/school", middleware.Authentication)
+	var schoolRoutes = app.Group("/api/v1/school", middleware.Authentication, middleware.IsSchool)
 
 	schoolRoutes.Get("/", school.GetSchoolByIdHandler)
 	//class
@@ -66,7 +67,15 @@ func RouteSetUp(app *fiber.App) {
 	schoolRoutes.Delete("/time-table/:tableId", school.DeleteTimeTableHandler)
 
 	/*-----------------------  teacher or staff apis ------------------------------*/
+	var staffRoutes = app.Group("/api/v1/staff", middleware.Authentication, middleware.IsStaff)
+	staffRoutes.Post("/attendance/", staff.CreateAttendanceByTeacherHandler)
+	staffRoutes.Put("/attendance/", staff.CreateAttendanceByTeacherHandler)
 
 	/*-----------------------  student  apis ------------------------------*/
+	// var studentRoutes = app.Group("/api/v1/student", middleware.Authentication, middleware.IsStudent)
+
+	/*-----------------------  Commmon apis ------------------------------*/
+	var commmonRoutes = app.Group("api/v1/school/", middleware.Authentication)
+	commmonRoutes.Get("/attendance", school.GetAttendanceHandler)
 
 }
